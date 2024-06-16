@@ -8,6 +8,9 @@
             font-family: Arial, sans-serif;
             margin: 20px;
             background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
         }
         .account-info {
             background-color: #fff;
@@ -17,9 +20,9 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             max-width: 400px;
             margin: auto;
+            text-align: center;
         }
         h2 {
-            text-align: center;
             color: #333;
         }
         .info {
@@ -36,14 +39,48 @@
             color: #555;
         }
         .balance {
-            display: inline-block;
-            text-align: center;
             font-size: 1.5em;
             color: #4CAF50;
         }
-        .logout-button {
+        .button-container {
             text-align: center;
             margin-top: 20px;
+        }
+        .button-container form {
+            display: inline-block;
+            margin: 5px;
+        }
+        .button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .exit-button {
+            background-color: #E32636;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .operations-button {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
         }
     </style>
 </head>
@@ -59,9 +96,15 @@
     <div class="balance">
         <label>Состояние счета: </label><span th:text="${balance}"></span>
     </div>
-    <div class="logout-button">
+    <div class="button-container">
+        <form th:action="@{/deposits}" method="get">
+            <button type="submit" class="button">Мои вклады</button>
+        </form>
+        <form th:action="@{/account_operations}" method="get">
+            <button type="submit" class="operations-button">Операции со счётом</button>
+        </form>
         <form th:action="@{perform_logout}" method="post">
-            <button type="submit">Выйти из аккаунта</button>
+            <button type="submit" class="exit-button">Выйти из аккаунта</button>
         </form>
     </div>
 </div>

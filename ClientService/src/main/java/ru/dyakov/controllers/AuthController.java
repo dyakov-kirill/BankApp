@@ -15,6 +15,7 @@ import ru.dyakov.entities.User;
 import ru.dyakov.requests.SignInRequest;
 import ru.dyakov.requests.SignUpRequest;
 import ru.dyakov.responses.AuthResponse;
+import ru.dyakov.responses.ValidateResponse;
 import ru.dyakov.security.UserService;
 import ru.dyakov.utils.JwtUtil;
 import ru.dyakov.utils.PhoneNumberValidator;
@@ -62,6 +63,17 @@ public class AuthController {
         } catch (AuthenticationException e) {
             log.error("Неудачная попытка входа");
             return new ResponseEntity<>("Неверный номер телефона или пароль", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+    @GetMapping("validateJwt")
+    public ResponseEntity<ValidateResponse> validateJwt(@RequestHeader(name="Authorization") String jwt) {
+        String token = jwt.substring(7);
+        if (jwtUtil.validateToken(token)) {
+            return ResponseEntity.ok(new ValidateResponse(jwtUtil.extractPhoneNumber(token)));
+        } else {
+            return ResponseEntity.badRequest().body(new ValidateResponse());
         }
     }
 

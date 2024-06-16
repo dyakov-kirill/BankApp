@@ -25,16 +25,9 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+
     @Autowired
     private CustomRemoteAuthenticationProvider customRemoteAuthenticationProvider;
-
-//    @Bean
-//    public AuthenticationManager authManager(HttpSecurity http) throws Exception {
-//        AuthenticationManagerBuilder authenticationManagerBuilder =
-//                http.getSharedObject(AuthenticationManagerBuilder.class);
-//        authenticationManagerBuilder.authenticationProvider(customRemoteAuthenticationProvider);
-//        return authenticationManagerBuilder.build();
-//    }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -50,8 +43,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .formLogin(formLogin -> formLogin
-                        .loginPage("/login").permitAll()
-                        .defaultSuccessUrl("/homepage"))
+                        .loginPage("/login")
+                        .permitAll()
+                        .successHandler(new CustomSuccessHandler()))
                 .logout(logout -> logout
                         .logoutUrl("/perform_logout")
                         .logoutSuccessUrl("/login?logout=true")

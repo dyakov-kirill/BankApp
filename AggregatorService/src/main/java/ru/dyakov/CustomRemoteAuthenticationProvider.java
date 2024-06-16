@@ -36,7 +36,7 @@ public class CustomRemoteAuthenticationProvider implements AuthenticationProvide
             ResponseEntity<AuthResponse> response = restTemplate.postForEntity(authUrl, request, AuthResponse.class);
             if (response.getBody() != null && response.getBody().isAuthenticated()) {
                 Collection<? extends GrantedAuthority> authorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-                return new UsernamePasswordAuthenticationToken(username, password, authorities);
+                return new JwtAuthentication(username, password, authorities, response.getBody().getToken());//new UsernamePasswordAuthenticationToken(username, password, authorities);
             } else {
                 throw new BadCredentialsException("Invalid credentials");
             }

@@ -42,20 +42,12 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().ignoringAntMatchers("/auth/signup", "/auth/signin")
+        http.csrf().ignoringAntMatchers("/auth/signup", "/auth/signin", "/auth/validateJwt")
                 .and()
                 .authorizeHttpRequests(request -> request
-                        .antMatchers("/auth/signup", "/auth/signin").permitAll()
+                        .antMatchers("/auth/signup", "/auth/signin", "/auth/validateJwt").permitAll()
                         .antMatchers("/auth/test").authenticated());
 
-       /* http.authorizeHttpRequests(request -> request.requestMatchers("/signin", "/signup").permitAll()
-                        .anyRequest().authenticated())
-                .formLogin(form -> form.loginPage("/login")
-                        .defaultSuccessUrl("/index", true)
-                        .permitAll())
-                .logout(logOut -> logOut.logoutUrl("/perform_logout")
-                        .logoutSuccessUrl("/login?logout=true")
-                        .permitAll());*/
         return http.build();
     }
 }

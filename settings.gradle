@@ -1,4 +1,8 @@
 rootProject.name = 'MTSFintechDiplomaProject'
 include 'AggregatorService'
 include 'ClientService'
+include 'AccountService'
+include 'AggregatorService:AccountService'
+findProject(':AggregatorService:AccountService')?.name = 'AccountService'
+include 'AccountService'
 

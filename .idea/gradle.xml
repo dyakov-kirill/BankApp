@@ -9,7 +9,9 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/AccountService" />
             <option value="$PROJECT_DIR$/AggregatorService" />
+            <option value="$PROJECT_DIR$/AggregatorService/AccountService" />
             <option value="$PROJECT_DIR$/ClientService" />
           </set>
         </option>

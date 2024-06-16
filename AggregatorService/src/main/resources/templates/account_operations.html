@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Операции со счётом</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+        .operations-container {
+            background-color: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 1em;
+            width: 80%;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+        .deposit {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .withdraw {
+            background-color: #f44336;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        .back-button {
+            margin-top: 20px;
+        }
+        .message {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+<div class="operations-container">
+    <h2>Операции со счётом</h2>
+    <form th:action="@{/deposit}" method="post">
+        <input type="number" step="0.01" name="amount" placeholder="Введите сумму для пополнения" required>
+        <button type="submit" class="deposit">Пополнить</button>
+    </form>
+    <form th:action="@{/withdraw}" method="post">
+        <input type="number" step="0.01" name="amount" placeholder="Введите сумму для снятия" required>
+        <button type="submit" class="withdraw">Снять</button>
+    </form>
+    <div class="back-button">
+        <a href="/homepage">Вернуться на главную</a>
+    </div>
+    <div class="message" th:if="${message}" th:text="${message}"></div>
+</div>
+</body>
+</html>
