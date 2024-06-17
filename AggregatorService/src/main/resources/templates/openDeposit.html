@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Подбор условий вклада</title>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
+    .deposit-form-container {
+        background-color: #fff;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 600px;
+        margin: auto;
+    }
+    h2 {
+        color: #333;
+    }
+    form {
+        margin-top: 20px;
+    }
+    label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+    select, input {
+        margin-bottom: 15px;
+        padding: 10px;
+        font-size: 1em;
+        width: 100%;
+    }
+    button {
+        padding: 10px 20px;
+        font-size: 1em;
+        cursor: pointer;
+    }
+    .submit-button {
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+    }
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgb(0, 0, 0);
+        background-color: rgba(0, 0, 0, 0.4);
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content {
+        background-color: #fefefe;
+        margin: auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 400px;
+        text-align: center;
+    }
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+<div class="deposit-form-container">
+  <h2>Подбор условий вклада</h2>
+  <form id="depositForm" th:action="@{/createRequest}" method="post">
+    <label for="depositType">Вид вклада:</label>
+    <select id="depositType" name="depositType" th:field="*{ticket.depositType}" required>
+      <option value="1">С пополнением и снятием</option>
+      <option value="2">С пополнением, но без снятия</option>
+      <option value="3">Без пополнения и без снятия</option>
+    </select>
+
+    <label for="depositTerm">Срок вклада:</label>
+    <select id="depositTerm" name="depositTerm" th:field="*{ticket.depositTerm}" required>
+      <option value="3">3 мес.</option>
+      <option value="6">6 мес.</option>
+      <option value="12">1 год</option>
+    </select>
+
+    <label for="amount">Сумма вклада:</label>
+    <input type="number" id="amount" name="amount" min="10000" placeholder="Минимальная сумма 10.000 рублей" th:field="*{ticket.amount}" required>
+
+    <label for="interestPayment">Выплата процентов:</label>
+    <select id="interestPayment" name="interestPayment" th:field="*{ticket.interestPayment}" required>
+      <option value="1">Ежемесячно</option>
+      <option value="2">В конце срока</option>
+    </select>
+
+    <label for="capitalization">Капитализация:</label>
+    <input type="checkbox" id="capitalization" name="capitalization" th:field="*{ticket.capitalization}">
+
+    <label for="withdrawalAccount">Счет списания:</label>
+    <input type="text" id="withdrawalAccount" th:value="${bankAccount}" name="withdrawalAccount" readonly required>
+
+    <label for="interestPaymentAccount">Счет для выплаты процентов:</label>
+    <input type="text" id="interestPaymentAccount" th:value="${bankAccount}" name="interestPaymentAccount" readonly required>
+
+    <label for="returnAccount">Счет возвращения вклада:</label>
+    <input type="text" id="returnAccount" th:value="${bankAccount}" name="returnAccount" readonly required>
+
+    <button type="submit" class="submit-button">Принять условия</button>
+  </form>
+</div>
+
+
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Вклады</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 1000px;
+            margin: auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+        .account-balance {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .open-deposits, .rejected-requests {
+            margin-bottom: 20px;
+        }
+        .deposit, .request {
+            background-color: #e9e9e9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        .deposit-type, .deposit-amount, .deposit-end-date, .deposit-rate,
+        .request-amount, .request-date, .request-reason {
+            display: block;
+        }
+        .min-deposit-details {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+        .open-deposit-btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Вклады</h2>
+    <div class="account-balance">
+        <strong>Сумма на счете:</strong> <span th:text="${accountBalance}"></span>
+    </div>
+    <div class="min-deposit-details">
+        <h3>Минимальные детали вклада</h3>
+        <p>Минимальная сумма: <span th:text="${minAmount}"></span></p>
+        <p>Минимальный период: <span th:text="${minPeriod}"></span></p>
+        <p>Максимальная ставка: <span th:text="${maxRate}"></span></p>
+    </div>
+    <form th:action="@{/openDeposit}" method="get">
+        <button type="submit" class="open-deposit-btn">Открыть вклад</button>
+    </form>
+    <div class="open-deposits">
+        <h3>Открытые вклады</h3>
+        <div th:each="deposit : ${openDeposits}" class="deposit">
+            <span class="deposit-type">Вид вклада: <span th:text="${deposit.depositType.depositsTypesName}"></span></span>
+            <span class="deposit-amount">Сумма: <span th:text="${deposit.depositsAmount}"></span></span>
+            <span class="deposit-end-date">Конечная дата: <span th:text="${deposit.endDate}"></span></span>
+            <span class="deposit-rate">Процентная ставка: <span th:text="11">%</span></span>
+        </div>
+    </div>
+    <div class="rejected-requests">
+        <h3>Отклоненные заявки</h3>
+        <div th:each="request : ${rejectedRequests}" class="request">
+            <span class="request-date">Дата оформления заявки: <span th:text="${request.request.requestDate}"></span></span>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

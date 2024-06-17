@@ -5,4 +5,5 @@ include 'AccountService'
 include 'AggregatorService:AccountService'
 findProject(':AggregatorService:AccountService')?.name = 'AccountService'
 include 'AccountService'
+include 'DepositService'
 

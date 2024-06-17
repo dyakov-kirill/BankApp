@@ -1,4 +1,4 @@
-package ru.dyakov;
+package ru.dyakov.security;
 
 import lombok.Getter;
 import lombok.Setter;
