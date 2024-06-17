@@ -6,10 +6,8 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.dyakov.entities.User;
-import ru.dyakov.requests.SignInRequest;
 import ru.dyakov.security.UserService;
 
 import java.util.Date;

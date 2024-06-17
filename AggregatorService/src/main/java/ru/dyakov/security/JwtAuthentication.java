@@ -2,7 +2,6 @@ package ru.dyakov.security;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 

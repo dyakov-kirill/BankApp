@@ -1,6 +1,5 @@
 package ru.dyakov.controllers;
 
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -11,25 +10,22 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
 import ru.dyakov.entities.CurrentRequestStatus;
 import ru.dyakov.entities.Customer;
 import ru.dyakov.entities.Deposit;
-import ru.dyakov.entities.Request;
 import ru.dyakov.requests.Ticket;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping
 @Slf4j
 public class UIDeposits {
 
+    // Страница со списком вкладов и заявок
     @GetMapping("/deposits")
     private String deposits(Model model, HttpServletRequest request) {
         String jwt = (String) request.getSession().getAttribute("Authorization");
@@ -37,8 +33,6 @@ public class UIDeposits {
         Customer customer = getCustomerInfo(jwt);
         List<Deposit> deposits = getDeposits(jwt);
         List<CurrentRequestStatus> rejectedRequests = getRejectedRequests(jwt);
-
-        //deposits.sort(Comparator.comparing(Deposit::getDepositsAmount).reversed());
 
         model.addAttribute("accountBalance", customer.getBankAccount().getAmount());
 
@@ -51,6 +45,7 @@ public class UIDeposits {
         return "deposits";
     }
 
+    // Страница с открытием вклада
     @GetMapping("/openDeposit")
     private String openDeposit(Model model, HttpServletRequest request) {
         String jwt = (String) request.getSession().getAttribute("Authorization");
@@ -68,6 +63,7 @@ public class UIDeposits {
         return "openDeposit";
     }
 
+    // Запрос на создание заявки
     @PostMapping("/createRequest")
     private String createRequest(Model model, HttpServletRequest request, Ticket ticket) {
         String jwt = (String) request.getSession().getAttribute("Authorization");
@@ -77,6 +73,7 @@ public class UIDeposits {
         return "sms";
     }
 
+    // Запрос на открытие вклада
     @PostMapping("/createDeposit")
     private String createDeposit(Model model, HttpServletRequest request) {
         Ticket ticket = (Ticket) request.getSession().getAttribute("ticket");
@@ -104,7 +101,7 @@ public class UIDeposits {
         return "result";
     }
 
-
+    // Получение списка вкладов (микросервис депозитов)
     private List<Deposit> getDeposits(String jwt) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -119,6 +116,7 @@ public class UIDeposits {
         return deposits;
     }
 
+    // Получение списка отклоненных заявок (микросервис депозитов)
     private List<CurrentRequestStatus> getRejectedRequests(String jwt) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -133,6 +131,7 @@ public class UIDeposits {
         return requests;
     }
 
+    // Получение информации о клиенте (микросервис клиентов)
     private Customer getCustomerInfo(String jwt) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -147,6 +146,7 @@ public class UIDeposits {
         return customer;
     }
 
+    // Создание заявки (микросервис депозитов)
     private int createRequest(String jwt) {
         RestTemplate restTemplate = new RestTemplate();
 

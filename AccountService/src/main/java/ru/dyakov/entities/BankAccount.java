@@ -1,6 +1,5 @@
 package ru.dyakov.entities;
 
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

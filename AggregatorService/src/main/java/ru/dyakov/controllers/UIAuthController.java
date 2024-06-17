@@ -4,28 +4,25 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.client.RestTemplate;
 import ru.dyakov.entities.Customer;
-import ru.dyakov.responses.AuthResponse;
-import ru.dyakov.responses.CustomerResponse;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Collections;
 
 @Controller
 public class UIAuthController {
+
+    // Страница входа
     @GetMapping("/login")
     public String login() {
         return "login";
     }
 
+
+    // Главная страница с состоянием счета и навигацией
     @GetMapping("/homepage")
     public String homepage(HttpServletRequest request, Model model) {
         String jwt = (String) request.getSession().getAttribute("Authorization");

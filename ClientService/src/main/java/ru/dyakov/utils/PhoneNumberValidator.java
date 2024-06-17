@@ -1,7 +1,5 @@
 package ru.dyakov.utils;
 
-import org.springframework.stereotype.Component;
-
 import java.util.regex.Pattern;
 
 public class PhoneNumberValidator {

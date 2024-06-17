@@ -11,8 +11,8 @@ import ru.dyakov.entities.Customer;
 import ru.dyakov.entities.Deposit;
 import ru.dyakov.entities.Request;
 import ru.dyakov.enumerations.StatusTypes;
-import ru.dyakov.repositories.DepositRepository;
 import ru.dyakov.repositories.CurrentRequestRepository;
+import ru.dyakov.repositories.DepositRepository;
 import ru.dyakov.repositories.RequestRepository;
 import ru.dyakov.requests.Ticket;
 import ru.dyakov.requests.WithdrawRequest;
@@ -20,7 +20,6 @@ import ru.dyakov.responses.WithdrawResponse;
 import ru.dyakov.utilties.JwtService;
 
 import java.math.BigDecimal;
-import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
@@ -81,6 +80,7 @@ public class DepositController {
             if (jwtService.validateJwt(token) && !jwtService.jwtIsExpired(token)) {
                 int customerId = jwtService.getCustomerIdFromJwtToken(token);
                 Request request = requestRepository.insertRequest(customerId, new Date());
+                log.info("Создана заявка на открытие вклада №{}", request.getId());
                 return ResponseEntity.ok(request.getId());
             } else {
                 return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
@@ -114,6 +114,7 @@ public class DepositController {
                 Deposit deposit = depositRepository.createDeposit(customerId, ticket.getDepositType(), refill, ticket.getAmount(),
                                                 startDate, endDate, rate, ticket.getInterestPayment(),
                                                 customerId, paymentDate, ticket.isCapitalization(), customerId);
+                log.info("Открыт вклад №{}", deposit.getId());
                 return ResponseEntity.ok(deposit.getId());
             } else {
                 return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);

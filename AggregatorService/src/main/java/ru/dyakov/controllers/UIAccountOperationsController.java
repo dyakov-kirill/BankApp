@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
-import ru.dyakov.entities.Customer;
 import ru.dyakov.requests.DepositRequest;
 import ru.dyakov.requests.WithdrawRequest;
 import ru.dyakov.responses.DepositResponse;
@@ -24,11 +23,14 @@ import java.math.BigDecimal;
 @RequestMapping("/")
 public class UIAccountOperationsController {
 
+
+    // Страница с пополнением и снятием денег
     @GetMapping("/account_operations")
     public String homepage(Model model) {
         return "account_operations";
     }
 
+    // Запрос на пополнение счета
     @PostMapping("/deposit")
     public String deposit(Model model, HttpServletRequest request, @RequestParam("amount") String amount) {
         BigDecimal numAmount = new BigDecimal(amount);
@@ -59,6 +61,7 @@ public class UIAccountOperationsController {
         return "account_operations";
     }
 
+    // Запрос для снятия денег
     @PostMapping("/withdraw")
     public String withdraw(Model model, HttpServletRequest request, @RequestParam("amount") String amount) {
         BigDecimal numAmount = new BigDecimal(amount);

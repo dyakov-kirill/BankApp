@@ -9,7 +9,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.dyakov.entities.User;
 import ru.dyakov.requests.SignInRequest;
@@ -32,7 +31,7 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-
+    // Запрос на регистрацию
     @PostMapping("signup")
     public ResponseEntity<String> signUp(@RequestBody SignUpRequest request) {
         if (!PhoneNumberValidator.isValid(request.getPhoneNumber())) {
@@ -48,6 +47,7 @@ public class AuthController {
         }
     }
 
+    // Запрос на вход
     @PostMapping("signin")
     public ResponseEntity signIn(@RequestBody SignInRequest request){
         try {
@@ -67,6 +67,7 @@ public class AuthController {
     }
 
 
+    // Валидация токена
     @GetMapping("validateJwt")
     public ResponseEntity<ValidateResponse> validateJwt(@RequestHeader(name="Authorization") String jwt) {
         String token = jwt.substring(7);
@@ -75,10 +76,5 @@ public class AuthController {
         } else {
             return ResponseEntity.badRequest().body(new ValidateResponse());
         }
-    }
-
-    @GetMapping("test")
-    public ResponseEntity<String> test(){
-        return ResponseEntity.ok("OK");
     }
 }

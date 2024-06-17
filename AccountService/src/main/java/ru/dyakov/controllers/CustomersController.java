@@ -5,13 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.dyakov.entities.Customer;
+import ru.dyakov.repositories.CustomersRepository;
+import ru.dyakov.requests.DepositRequest;
 import ru.dyakov.requests.WithdrawRequest;
 import ru.dyakov.responses.DepositResponse;
 import ru.dyakov.responses.WithdrawResponse;
 import ru.dyakov.utilties.JwtService;
-import ru.dyakov.entities.Customer;
-import ru.dyakov.repositories.CustomersRepository;
-import ru.dyakov.requests.DepositRequest;
 
 import java.math.BigDecimal;
 
@@ -26,6 +26,7 @@ public class CustomersController {
     @Autowired
     private JwtService jwtService;
 
+    // Получение информации о клиенте
     @GetMapping("/getCustomerInfo")
     private ResponseEntity<Customer> getCustomer(@RequestHeader(name="Authorization") String jwt) {
         String token = jwt.substring(7);
