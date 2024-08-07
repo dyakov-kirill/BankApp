@@ -15,14 +15,7 @@ public interface DepositRepository extends JpaRepository<Deposit, Integer> {
 
     List<Deposit> findByBankAccountId(Integer accountId);
 
-    @Query(value = "INSERT INTO deposits" +
-            " (deposit_account_id, deposit_type_id, deposit_refill, deposits_amount, start_date, end_date, " +
-            "deposit_rate, type_percent_payment_id, percent_payment_account_id, " +
-            "percent_payment_date, capitalization, deposit_refund_account_id) " +
-            "VALUES " +
-            "(:depositAccountId, :depositTypeId, :depositRefill, :depositsAmount, :startDate, :endDate," +
-            ":depositRate, :typePercentPaymentId, :percentPaymentAccountId," +
-            ":percentPaymentDate, :capitalization, :depositRefundAccountId) returning *", nativeQuery = true)
+    @Query(value = "INSERT INTO deposits (deposit_account_id, deposit_type_id, deposit_refill, deposits_amount, start_date, end_date, deposit_rate, type_percent_payment_id, percent_payment_account_id, percent_payment_date, capitalization, deposit_refund_account_id) VALUES (:depositAccountId, :depositTypeId, :depositRefill, :depositsAmount, :startDate, :endDate, :depositRate, :typePercentPaymentId, :percentPaymentAccountId, :percentPaymentDate, :capitalization, :depositRefundAccountId) returning *", nativeQuery = true)
     Deposit createDeposit(@Param("depositAccountId") int depositAccountId, @Param("depositTypeId") int depositTypeId, @Param("depositRefill") boolean depositRefill, @Param("depositsAmount") BigDecimal depositsAmount,
                           @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate, @Param("depositRate") BigDecimal depositRate,
                           @Param("typePercentPaymentId") int typePercentPaymentId, @Param("percentPaymentAccountId") int percentPaymentAccountId,

@@ -17,6 +17,7 @@ import ru.dyakov.repositories.RequestRepository;
 import ru.dyakov.requests.Ticket;
 import ru.dyakov.requests.WithdrawRequest;
 import ru.dyakov.responses.WithdrawResponse;
+import ru.dyakov.services.DepositService;
 import ru.dyakov.utilties.JwtService;
 
 import java.math.BigDecimal;
@@ -40,120 +41,38 @@ public class DepositController {
     @Autowired
     private RequestRepository requestRepository;
 
+    @Autowired
+    private DepositService depositService;
+
+    // Получить список всех вкладов
     @GetMapping("/getDeposits")
     private ResponseEntity<Iterable<Deposit>> getDeposits(@RequestHeader(name="Authorization") String jwt) {
         String token = jwt.substring(7);
-        try {
-            if (jwtService.validateJwt(token) && !jwtService.jwtIsExpired(token)) {
-                int customerId = jwtService.getCustomerIdFromJwtToken(token);
-                List<Deposit> result = depositRepository.findByBankAccountId(customerId);
-
-                return ResponseEntity.ok(result);
-            } else {
-                return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-        }
+        int customerId = jwtService.getCustomerIdFromJwtToken(token);
+        Iterable<Deposit> result = depositService.getDeposits(customerId);
+        return ResponseEntity.ok(result);
     }
 
+    // Получить отклоненные заявки
     @GetMapping("/getRejectedRequests")
     private ResponseEntity<Iterable<CurrentRequestStatus>> getRejectedRequests(@RequestHeader(name="Authorization") String jwt) {
-        String token = jwt.substring(7);
-        try {
-            if (jwtService.validateJwt(token) && !jwtService.jwtIsExpired(token)) {
-                int customerId = jwtService.getCustomerIdFromJwtToken(token);
-                List<CurrentRequestStatus> result = currentRequestRepository.findByRequestStatusId(StatusTypes.REJECTED.id);
-                return ResponseEntity.ok(result);
-            } else {
-                return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-        }
+        Iterable<CurrentRequestStatus> result = depositService.getRejectedRequests();
+        return ResponseEntity.ok(result);
     }
 
+    // Создание заявки
     @PostMapping("/createRequest")
     private ResponseEntity<Integer> createRequest(@RequestHeader(name="Authorization") String jwt) {
         String token = jwt.substring(7);
-        try {
-            if (jwtService.validateJwt(token) && !jwtService.jwtIsExpired(token)) {
-                int customerId = jwtService.getCustomerIdFromJwtToken(token);
-                Request request = requestRepository.insertRequest(customerId, new Date());
-                log.info("Создана заявка на открытие вклада №{}", request.getId());
-                return ResponseEntity.ok(request.getId());
-            } else {
-                return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-        }
+        int customerId = jwtService.getCustomerIdFromJwtToken(token);
+        Integer requestId = depositService.createRequest(customerId);
+        return ResponseEntity.ok(requestId);
     }
 
+    // Открытие вклада
     @PostMapping("/createDeposit")
     private ResponseEntity<Integer> createDeposit(@RequestHeader(name="Authorization") String jwt, @RequestBody Ticket ticket) {
-        String token = jwt.substring(7);
-        try {
-            if (jwtService.validateJwt(token) && !jwtService.jwtIsExpired(token)) {
-                int customerId = jwtService.getCustomerIdFromJwtToken(token);
-                Customer customer = getCustomerInfo(jwt);
-
-                if (customer.getBankAccount().getAmount().compareTo(ticket.getAmount()) < 0) {
-                    createRejectedRequest(ticket.getRequestId());
-                    return ResponseEntity.ok(-1);
-                }
-
-                boolean refill = ticket.getDepositType() != 3;
-
-
-                LocalDate startDate = LocalDate.now();
-                LocalDate endDate = startDate.plusMonths(ticket.getDepositTerm());
-                LocalDate paymentDate = startDate.plusMonths(1);
-                BigDecimal rate = BigDecimal.valueOf(11);
-                withdrawFromAccount(jwt, ticket.getAmount());
-                Deposit deposit = depositRepository.createDeposit(customerId, ticket.getDepositType(), refill, ticket.getAmount(),
-                                                startDate, endDate, rate, ticket.getInterestPayment(),
-                                                customerId, paymentDate, ticket.isCapitalization(), customerId);
-                log.info("Открыт вклад №{}", deposit.getId());
-                return ResponseEntity.ok(deposit.getId());
-            } else {
-                return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, null, HttpStatus.FORBIDDEN);
-        }
-    }
-
-    private Customer getCustomerInfo(String jwt) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String urlCustomer = "http://localhost:8082/api/accounts/getCustomerInfo";
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
-
-        HttpEntity<String> entity = new HttpEntity<>(headers);
-
-        ResponseEntity<Customer> response = restTemplate.exchange(urlCustomer, HttpMethod.GET, entity, Customer.class);
-        Customer customer = response.getBody();
-        return customer;
-    }
-
-    private void withdrawFromAccount(String jwt, BigDecimal amount) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        String url = "http://localhost:8082/api/accounts/withdraw";
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("Authorization", jwt);
-
-        WithdrawRequest withdrawRequest = new WithdrawRequest(amount);
-        HttpEntity<WithdrawRequest> entity = new HttpEntity<>(withdrawRequest, headers);
-
-        restTemplate.exchange(url, HttpMethod.POST, entity, WithdrawResponse.class);
-    }
-
-    @Transactional
-    private void createRejectedRequest(int requestId) {
-        currentRequestRepository.insertRequest(requestId, StatusTypes.REJECTED.id, new Date());
+        int result = depositService.createDeposit(jwt, ticket);
+        return ResponseEntity.ok(result);
     }
 }
